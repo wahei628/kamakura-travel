@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import Footer from "@/components/layout/footer";
-import Header from "@/components/layout/header";
-import { MuiThemeProvider } from "@/components/layout/theme-provider";
-import { SessionProvider } from "next-auth/react";
-import { Roboto } from "next/font/google";
-import "./globals.css";
+import { Roboto } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react'
+import Footer from '@/components/layout/footer'
+import Header from '@/components/layout/header'
+import { MuiThemeProvider } from '@/components/layout/theme-provider'
+import './globals.css'
 
 const roboto = Roboto({
-  weight: ["300", "400", "500", "700"],
-  subsets: ["latin"],
-  display: "swap",
-});
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en">
@@ -32,5 +32,5 @@ export default function RootLayout({
         </SessionProvider>
       </body>
     </html>
-  );
+  )
 }

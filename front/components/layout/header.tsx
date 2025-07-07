@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Favorite,
@@ -6,7 +6,7 @@ import {
   Menu as MenuIcon,
   Person,
   Search,
-} from "@mui/icons-material";
+} from '@mui/icons-material'
 import {
   AppBar,
   Box,
@@ -20,52 +20,52 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from "@mui/material";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+} from '@mui/material'
+import Link from 'next/link'
+import { signIn, signOut, useSession } from 'next-auth/react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function Header() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { data: session, status } = useSession();
-  const postedRef = useRef(false);
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { data: session } = useSession()
+  const postedRef = useRef(false)
 
   useEffect(() => {
     if (session && !postedRef.current) {
-      postedRef.current = true;
-      console.log("session:", session); // デバッグ用
-      fetch(process.env.NEXT_PUBLIC_RAILS_API_URL + "/api/v1/users", {
-        method: "POST",
+      postedRef.current = true
+      console.log('session:', session)
+      fetch(process.env.NEXT_PUBLIC_RAILS_API_URL + '/api/v1/users', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: session.user?.name,
           email: session.user?.email,
-          provider: "google",
-          uid: session.user?.email, // subは使わずemailをuidに
+          provider: 'google',
+          uid: session.user?.email,
         }),
       })
         .then((res) => {
           if (!res.ok) {
             return res.text().then((t) => {
-              throw new Error(t);
-            });
+              throw new Error(t)
+            })
           }
         })
         .catch((e) => {
-          console.error("Rails API user保存失敗", e);
-        });
+          console.error('Rails API user保存失敗', e)
+        })
     }
-  }, [session]);
+  }, [session])
 
   const navigationItems = [
-    { label: "スポット検索", href: "/spots", icon: <Search /> },
-    { label: "いいね一覧", href: "/likes", icon: <Favorite /> },
-    { label: "マイページ", href: "/profile", icon: <Person /> },
-  ];
+    { label: 'スポット検索', href: '/spots', icon: <Search /> },
+    { label: 'いいね一覧', href: '/likes', icon: <Favorite /> },
+    { label: 'マイページ', href: '/profile', icon: <Person /> },
+  ]
 
   return (
     <>
@@ -117,15 +117,15 @@ export default function Header() {
                     color="inherit"
                     className="border border-white ml-4"
                     sx={{
-                      color: "#fff",
-                      borderColor: "#fff",
-                      "&:hover": {
-                        bgcolor: "#fff",
-                        color: "primary.main",
-                        borderColor: "#fff",
+                      color: '#fff',
+                      borderColor: '#fff',
+                      '&:hover': {
+                        bgcolor: '#fff',
+                        color: 'primary.main',
+                        borderColor: '#fff',
                       },
                     }}
-                    onClick={() => signIn("google")}
+                    onClick={() => signIn('google')}
                   >
                     ログイン
                   </Button>
@@ -134,7 +134,7 @@ export default function Header() {
                     size="small"
                     color="secondary"
                     className="bg-accent-500 text-accent-foreground hover:bg-accent-600"
-                    onClick={() => signIn("google")}
+                    onClick={() => signIn('google')}
                   >
                     新規登録
                   </Button>
@@ -181,5 +181,5 @@ export default function Header() {
         </Box>
       </Drawer>
     </>
-  );
+  )
 }
