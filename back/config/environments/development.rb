@@ -69,5 +69,5 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.hosts << "back"
-  config.hosts << 'back:3000'
+  config.hosts << "back:3000"
 end
