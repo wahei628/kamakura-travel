@@ -12,7 +12,20 @@ const handler = NextAuth({
     strategy: 'jwt' as const,
   },
   callbacks: {
-    async session({ session }: { session: any }) {
+    async jwt({ token, trigger, session }) {
+      // プロフィール更新時にトークンを更新
+      if (trigger === 'update' && session?.name) {
+        token.name = session.name
+      }
+      return token
+    },
+    async session({ session, token }) {
+      // トークンからセッションに情報を渡す
+      if (token && session.user) {
+        session.user.name = token.name as string
+        session.user.email = token.email as string
+        session.user.image = token.picture as string
+      }
       return session
     },
     async signIn() {

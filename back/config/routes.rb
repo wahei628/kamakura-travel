@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :tasks, only: %i[index create destroy]
       resources :users, only: %i[create]
+      patch "users/profile", to: "users#update_profile"
     end
   end
 end
