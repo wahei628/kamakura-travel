@@ -1,8 +1,6 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { Person, Close, Edit, Save, Cancel } from '@mui/icons-material'
 import {
   Dialog,
   DialogTitle,
@@ -16,20 +14,22 @@ import {
   Alert,
   CircularProgress,
   IconButton,
-} from "@mui/material";
-import { Person, Close, Edit, Save, Cancel } from "@mui/icons-material";
+} from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 
 interface ProfileEditModalProps {
-  open: boolean;
-  onClose: () => void;
-  onUpdatedName?: (name: string) => void;
+  open: boolean
+  onClose: () => void
+  onUpdatedName?: (name: string) => void
   user?: {
-    id?: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-    railsId?: number;
-  } | null;
+    id?: string
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    railsId?: number
+  } | null
 }
 
 export default function ProfileEditModal({
@@ -38,96 +38,96 @@ export default function ProfileEditModal({
   user,
   onUpdatedName,
 }: ProfileEditModalProps) {
-  const { data: session, update } = useSession();
-  const router = useRouter();
-  const [displayName, setDisplayName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const { data: update } = useSession()
+  const router = useRouter()
+  const [displayName, setDisplayName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
 
   // Rails APIのベースURL
-  const RAILS_API_URL = process.env.NEXT_PUBLIC_RAILS_API_URL + "/api/v1";
+  const RAILS_API_URL = process.env.NEXT_PUBLIC_RAILS_API_URL + '/api/v1'
 
   // モーダルが開かれた時にユーザー情報を初期化
   useEffect(() => {
     if (open && user) {
-      setDisplayName(user.name || "");
-      setError(null);
-      setSuccess(false);
+      setDisplayName(user.name || '')
+      setError(null)
+      setSuccess(false)
     }
-  }, [open, user]);
+  }, [open, user])
 
   const handleSave = async () => {
     if (!displayName.trim()) {
-      setError("表示名を入力してください");
-      return;
+      setError('表示名を入力してください')
+      return
     }
 
     if (displayName.trim().length > 50) {
-      setError("表示名は50文字以内で入力してください");
-      return;
+      setError('表示名は50文字以内で入力してください')
+      return
     }
 
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
       // Rails APIにプロフィール更新リクエストを送信
       const response = await fetch(`${RAILS_API_URL}/users/profile`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: user?.email, // emailでユーザーを特定
           name: displayName.trim(),
         }),
-      });
+      })
 
       if (response.ok) {
-        const data = await response.json();
-        console.log("Profile updated:", data);
+        const data = await response.json()
+        console.log('Profile updated:', data)
 
-        if (data.status === "ok") {
+        if (data.status === 'ok') {
           // NextAuthセッション更新(callbacksでtoken/sessionを反映させること)
-          await update({ name: displayName.trim() });
+          await update({ name: displayName.trim() })
           // 親のstateを更新(渡されていれば)
-          onUpdatedName?.(displayName.trim());
+          onUpdatedName?.(displayName.trim())
           // サーバーコンポーネントで表示しているなら必要に応じて
-          router.refresh();
+          router.refresh()
 
-          setSuccess(true);
-          setTimeout(() => onClose(), 1500);
+          setSuccess(true)
+          setTimeout(() => onClose(), 1500)
         } else {
           setError(
             data.errors
-              ? data.errors.join(", ")
-              : "プロフィールの更新に失敗しました"
-          );
+              ? data.errors.join(', ')
+              : 'プロフィールの更新に失敗しました',
+          )
         }
       } else {
-        const errorData = await response.json();
+        const errorData = await response.json()
         const errorMessage = errorData.errors
           ? Array.isArray(errorData.errors)
-            ? errorData.errors.join(", ")
+            ? errorData.errors.join(', ')
             : errorData.errors
-          : errorData.error || "プロフィールの更新に失敗しました";
-        setError(errorMessage);
+          : errorData.error || 'プロフィールの更新に失敗しました'
+        setError(errorMessage)
       }
     } catch (error) {
-      console.error("Profile update error:", error);
-      setError("ネットワークエラーが発生しました。もう一度お試しください。");
+      console.error('Profile update error:', error)
+      setError('ネットワークエラーが発生しました。もう一度お試しください。')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleCancel = () => {
-    setDisplayName(user?.name || "");
-    setError(null);
-    setSuccess(false);
-    onClose();
-  };
+    setDisplayName(user?.name || '')
+    setError(null)
+    setSuccess(false)
+    onClose()
+  }
 
   return (
     <Dialog
@@ -136,7 +136,7 @@ export default function ProfileEditModal({
       maxWidth="sm"
       fullWidth
       PaperProps={{
-        className: "rounded-lg",
+        className: 'rounded-lg',
       }}
     >
       <DialogTitle className="flex items-center justify-between pb-2">
@@ -156,7 +156,7 @@ export default function ProfileEditModal({
         <Box className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
           <Avatar
             src={user?.image || undefined}
-            alt={user?.name || "ユーザー"}
+            alt={user?.name || 'ユーザー'}
             className="w-16 h-16"
           >
             <Person className="text-2xl" />
@@ -202,7 +202,7 @@ export default function ProfileEditModal({
 
           <Box className="p-3 bg-blue-50 rounded-lg">
             <Typography variant="body2" color="text.secondary">
-              <strong>注意:</strong>{" "}
+              <strong>注意:</strong>{' '}
               メールアドレスはGoogleアカウントと連携しているため変更できません。
               表示名の変更はデータベースに保存されます。
             </Typography>
@@ -231,9 +231,9 @@ export default function ProfileEditModal({
           startIcon={isLoading ? <CircularProgress size={16} /> : <Save />}
           className="bg-primary-500 hover:bg-primary-600"
         >
-          {isLoading ? "保存中..." : "保存"}
+          {isLoading ? '保存中...' : '保存'}
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

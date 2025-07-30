@@ -1,13 +1,12 @@
-"use client";
+'use client'
 
-import ProfileEditModal from "@/components/layout/profile-edit-modal";
 import {
   CalendarToday,
   Edit,
   Favorite,
   LocationOn,
   Person,
-} from "@mui/icons-material";
+} from '@mui/icons-material'
 import {
   Avatar,
   Box,
@@ -25,80 +24,81 @@ import {
   Tabs,
   TextField,
   Typography,
-} from "@mui/material";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+} from '@mui/material'
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import ProfileEditModal from '@/components/layout/profile-edit-modal'
 
 // デフォルトのプロフィールデータ（フォールバック用）
 const defaultProfile = {
-  name: "ユーザー",
-  email: "",
-  joinDate: "2024-01-01",
+  name: 'ユーザー',
+  email: '',
+  joinDate: '2024-01-01',
   totalLikes: 0,
   visitedSpots: 0,
-  avatar: "/placeholder.svg?height=100&width=100",
-};
+  avatar: '/placeholder.svg?height=100&width=100',
+}
 
 const likeHistory = [
-  { id: 1, name: "隠れ茶屋 竹の庵", category: "グルメ", date: "2024-01-15" },
-  { id: 2, name: "夕日の展望台", category: "景観", date: "2024-01-10" },
-  { id: 3, name: "古民家ギャラリー", category: "文化", date: "2024-01-05" },
-];
+  { id: 1, name: '隠れ茶屋 竹の庵', category: 'グルメ', date: '2024-01-15' },
+  { id: 2, name: '夕日の展望台', category: '景観', date: '2024-01-10' },
+  { id: 3, name: '古民家ギャラリー', category: '文化', date: '2024-01-05' },
+]
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
-  const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [tabValue, setTabValue] = useState(0);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [userProfile, setUserProfile] = useState(defaultProfile);
+  const { data: session, status } = useSession()
+  const [isEditing, setIsEditing] = useState(false)
+  const [userName, setUserName] = useState('')
+  const [tabValue, setTabValue] = useState(0)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [userProfile, setUserProfile] = useState(defaultProfile)
 
   // セッションからユーザー情報を取得してプロフィールを更新
   useEffect(() => {
     if (session?.user) {
       const profile = {
-        name: session.user.name || "ユーザー",
-        email: session.user.email || "",
-        joinDate: "2024-01-01", // 実際のアプリではセッションから取得
+        name: session.user.name || 'ユーザー',
+        email: session.user.email || '',
+        joinDate: '2024-01-01', // 実際のアプリではセッションから取得
         totalLikes: 15, // 実際のアプリではAPIから取得
         visitedSpots: 8, // 実際のアプリではAPIから取得
-        avatar: session.user.image || "/placeholder.svg?height=100&width=100",
-      };
-      setUserProfile(profile);
-      setUserName(profile.name);
+        avatar: session.user.image || '/placeholder.svg?height=100&width=100',
+      }
+      setUserProfile(profile)
+      setUserName(profile.name)
     }
-  }, [session]);
+  }, [session])
 
   const handleSave = () => {
-    setIsEditing(false);
+    setIsEditing(false)
     // ここで実際の保存処理を行う
-  };
+  }
 
   // プロフィール編集後のコールバック
   const handleProfileUpdated = (newName: string) => {
     setUserProfile((prev) => ({
       ...prev,
       name: newName,
-    }));
-    setUserName(newName);
-  };
+    }))
+    setUserName(newName)
+  }
 
   // ローディング状態
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <Container maxWidth="lg" className="py-8">
         <Typography>読み込み中...</Typography>
       </Container>
-    );
+    )
   }
 
   // 未認証状態
-  if (status === "unauthenticated") {
+  if (status === 'unauthenticated') {
     return (
       <Container maxWidth="lg" className="py-8">
         <Typography>ログインが必要です</Typography>
       </Container>
-    );
+    )
   }
 
   return (
@@ -118,7 +118,7 @@ export default function ProfilePage() {
           <Card>
             <CardContent className="p-6 text-center">
               <Avatar
-                src={userProfile.avatar || "/placeholder.svg"}
+                src={userProfile.avatar || '/placeholder.svg'}
                 alt={userProfile.name}
                 className="w-24 h-24 mx-auto mb-4"
               >
@@ -185,7 +185,7 @@ export default function ProfilePage() {
         {/* メインコンテンツ */}
         <Grid item xs={12} lg={8}>
           <Card>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs
                 value={tabValue}
                 onChange={(_, newValue) => setTabValue(newValue)}
@@ -206,7 +206,7 @@ export default function ProfilePage() {
                     startIcon={<Edit />}
                     onClick={() => setIsEditing(!isEditing)}
                   >
-                    {isEditing ? "キャンセル" : "編集"}
+                    {isEditing ? 'キャンセル' : '編集'}
                   </Button>
                 </Box>
 
@@ -316,5 +316,5 @@ export default function ProfilePage() {
         onUpdatedName={handleProfileUpdated}
       />
     </Container>
-  );
+  )
 }
