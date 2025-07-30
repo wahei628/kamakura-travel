@@ -114,7 +114,7 @@ export default function ProfilePage() {
 
       <Grid container spacing={4}>
         {/* プロフィール情報 */}
-        <Grid item xs={12} lg={4}>
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card>
             <CardContent className="p-6 text-center">
               <Avatar
@@ -136,7 +136,7 @@ export default function ProfilePage() {
               </Typography>
 
               <Grid container spacing={2} className="mb-4">
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Box className="text-center">
                     <Typography
                       variant="h4"
@@ -149,7 +149,7 @@ export default function ProfilePage() {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={{ xs: 6 }}>
                   <Box className="text-center">
                     <Typography
                       variant="h4"
@@ -183,7 +183,7 @@ export default function ProfilePage() {
         </Grid>
 
         {/* メインコンテンツ */}
-        <Grid item xs={12} lg={8}>
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Card>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs
