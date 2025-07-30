@@ -1,23 +1,23 @@
 'use client'
 
-import { Person, Close, Edit, Save, Cancel } from '@mui/icons-material'
+import { Cancel, Close, Edit, Person, Save } from '@mui/icons-material'
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Box,
-  Avatar,
-  Typography,
   Alert,
+  Avatar,
+  Box,
+  Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
+  TextField,
+  Typography,
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface ProfileEditModalProps {
   open: boolean
@@ -38,7 +38,7 @@ export default function ProfileEditModal({
   user,
   onUpdatedName,
 }: ProfileEditModalProps) {
-  const { data: update } = useSession()
+  const { update } = useSession()
   const router = useRouter()
   const [displayName, setDisplayName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
